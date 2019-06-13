@@ -34,11 +34,15 @@
         }
     }
 
+    // Store the id of the item being dragged and set the mouse cursor.
+    // Called when item is "lifted" by cursor.
     function handleDragStart(evt) {
         evt.dataTransfer.setData("text/plain", evt.target.id);
-        evt.dataTransfer.dropEffect = "move";
     }
 
+    // Get the element that's stored (i.e. the item being dragged) and append
+    // to target (i.e. the target list).
+    // The item being dragged is automatically removed from the previous parent.
     function handleDrop(evt) {
         evt.preventDefault();
 
@@ -46,7 +50,9 @@
         evt.target.appendChild(document.querySelector("#" + draggedElement));
     }
 
+    // When element/cursor hovers over drop zone, prevent browser intervening.
     function handleDragover(evt) {
         evt.preventDefault();
     }
+
 })();
