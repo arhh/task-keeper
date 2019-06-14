@@ -14,11 +14,13 @@ th {
 
 ul {
     list-style-type: none;
+    background-color: #b0fff3;
     padding: 0;
 }
 
 li {
-    background-color: green;
+    background-color: #a9fe30;
     margin: 5%;
+    width: 20%;
     text-align: center;
 }
