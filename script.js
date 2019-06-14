@@ -50,7 +50,7 @@
     // Called when item is "lifted" by cursor.
     function handleDragStart(evt) {
         evt.dataTransfer.setData("listItem", evt.target.id);
-        checkIsEmpty(evt.target.parentNode);
+        evt.dataTransfer.setData("previousList", evt.target.parentNode.id);
     }
 
     // Get the element that's stored (i.e. the item being dragged) and append
@@ -59,7 +59,11 @@
     function handleDrop(evt) {
         evt.preventDefault();
 
+        var previousList = evt.dataTransfer.getData("previousList");
+        checkIsEmpty(document.querySelector("#" + previousList));
+
         checkIsEmpty(evt.target);
+
         var draggedElement = evt.dataTransfer.getData("listItem");
         evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
     }
