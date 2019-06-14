@@ -1,15 +1,27 @@
 (function () {
     window.addEventListener("DOMContentLoaded", init, false);
 
+    var toDoList;
+    var doingList;
+    var doneList;
+
+    var lists;
+
+    var toDoListItems;
+    var doingListItems;
+    var doneListItems;
+
     function init() {
 
-        var toDoList = document.querySelector("#to-do-list");
-        var doingList = document.querySelector("#doing-list");
-        var doneList = document.querySelector("#done-list");
+        toDoList = document.querySelector("#to-do-list");
+        doingList = document.querySelector("#doing-list");
+        doneList = document.querySelector("#done-list");
 
-        var toDoListItems = document.querySelectorAll("#to-do-list li");
-        var doingListItems = document.querySelectorAll("#doing-list li");
-        var doneListItems = document.querySelectorAll("#done-list li");
+        lists = [toDoList, doingList, doneList];
+
+        toDoListItems = document.querySelectorAll("#to-do-list li");
+        doingListItems = document.querySelectorAll("#doing-list li");
+        doneListItems = document.querySelectorAll("#done-list li");
 
         toDoList.addEventListener("drop", handleDrop, false);
         toDoList.addEventListener("dragover", handleDragover, false);
@@ -32,6 +44,8 @@
             // console.log(doneListItems[i]);
             doneListItems[i].addEventListener("dragstart", handleDragStart, false);
         }
+
+        window.setInterval(monitorLists, 1000);
     }
 
     // Store the id of the item being dragged and set the mouse cursor.
@@ -46,13 +60,27 @@
     function handleDrop(evt) {
         evt.preventDefault();
 
+        evt.target.style.height = null;
         var draggedElement = evt.dataTransfer.getData("text");
-        evt.target.appendChild(document.querySelector("#" + draggedElement));
+        evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
     }
 
     // When element/cursor hovers over drop zone, prevent browser intervening.
     function handleDragover(evt) {
         evt.preventDefault();
+    }
+
+    function monitorLists() {
+        for (var i = 0; i < lists.length; i++) {
+            var list = lists[i];
+            checkIsEmpty(list);
+        }
+    }
+
+    function checkIsEmpty(l) {
+        if (l.children.length === 0) {
+            l.style.height = "50px";
+        }
     }
 
 })();
