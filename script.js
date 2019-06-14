@@ -44,14 +44,13 @@
             // console.log(doneListItems[i]);
             doneListItems[i].addEventListener("dragstart", handleDragStart, false);
         }
-
-        window.setInterval(monitorLists, 1000);
     }
 
     // Store the id of the item being dragged and set the mouse cursor.
     // Called when item is "lifted" by cursor.
     function handleDragStart(evt) {
-        evt.dataTransfer.setData("text/plain", evt.target.id);
+        evt.dataTransfer.setData("listItem", evt.target.id);
+        checkIsEmpty(evt.target.parentNode);
     }
 
     // Get the element that's stored (i.e. the item being dragged) and append
@@ -60,8 +59,8 @@
     function handleDrop(evt) {
         evt.preventDefault();
 
-        evt.target.style.height = null;
-        var draggedElement = evt.dataTransfer.getData("text");
+        checkIsEmpty(evt.target);
+        var draggedElement = evt.dataTransfer.getData("listItem");
         evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
     }
 
@@ -78,8 +77,12 @@
     }
 
     function checkIsEmpty(l) {
-        if (l.children.length === 0) {
+        console.log(l);
+        if (l.children.length === 1) {
             l.style.height = "50px";
+        }
+        else {
+            l.style.height = null;
         }
     }
 
