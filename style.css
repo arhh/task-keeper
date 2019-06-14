@@ -20,7 +20,8 @@ ul {
 
 li {
     background-color: #a9fe30;
-    margin: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
     width: 20%;
     text-align: center;
 }
