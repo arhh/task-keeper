@@ -12,9 +12,12 @@ th {
     background-color: #d9d9d9;
 }
 
+tr {
+    background-color: #b0fff3;
+}
+
 ul {
     list-style-type: none;
-    background-color: #b0fff3;
     padding: 0;
 }
 
