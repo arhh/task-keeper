@@ -62,10 +62,10 @@
         var previousList = evt.dataTransfer.getData("previousList");
         checkIsEmpty(document.querySelector("#" + previousList));
 
-        checkIsEmpty(evt.target);
-
         var draggedElement = evt.dataTransfer.getData("listItem");
         evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
+
+        checkIsEmpty(evt.target);
     }
 
     // When element/cursor hovers over drop zone, prevent browser intervening.
@@ -82,7 +82,7 @@
 
     function checkIsEmpty(l) {
         console.log(l);
-        if (l.children.length === 1) {
+        if (l.children.length <= 1) {
             l.style.height = "50px";
         }
         else {
