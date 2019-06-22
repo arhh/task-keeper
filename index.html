@@ -7,34 +7,42 @@
         <title>Task Keeper</title>
     </head>
     <body>
-        <h1>Task Keeper</h1>
-
-        <table>
-            <tr>
-                <th>To Do</th>
-                <th>Doing</th>
-                <th>Done</th>
-            </tr>
-            <tr>
-                <td>
-                    <ul id="to-do-list">
-                        <li id="a" draggable="true">Will do A</li>
-                    </ul>
-                </td>
-                <td>
-                    <ul id="doing-list">
-                        <li id="b" draggable="true">Doing B</li>
-                        <li id="c" draggable="true">Doing C</li>
-                    </ul>
-                </td>
-                <td>
-                    <ul id="done-list">
-                        <li id="d" draggable="true">Done D</li>
-                        <li id="e" draggable="true">Done E</li>
-                        <li id="f" draggable="true">Done F</li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
+        <header>
+            <h1>Task Keeper</h1>
+        </header>
+        <div class="flex-container">
+            <aside>
+                <button>Create Task</button>
+            </aside>
+            <main>
+                <table>
+                    <tr>
+                        <th>To Do</th>
+                        <th>Doing</th>
+                        <th>Done</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul id="to-do-list">
+                                <li id="a" draggable="true">Will do A</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul id="doing-list">
+                                <li id="b" draggable="true">Doing B</li>
+                                <li id="c" draggable="true">Doing C</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul id="done-list">
+                                <li id="d" draggable="true">Done D</li>
+                                <li id="e" draggable="true">Done E</li>
+                                <li id="f" draggable="true">Done F</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </main>
+        </div>
     </body>
 </html>
