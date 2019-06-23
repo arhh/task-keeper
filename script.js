@@ -11,6 +11,8 @@
     var doingListItems;
     var doneListItems;
 
+    var createTaskButton;
+
     function init() {
 
         toDoList = document.querySelector("#to-do-list");
@@ -18,6 +20,8 @@
         doneList = document.querySelector("#done-list");
 
         lists = [toDoList, doingList, doneList];
+
+        createTaskButton = document.querySelector("#create-task-button");
 
         toDoListItems = document.querySelectorAll("#to-do-list li");
         doingListItems = document.querySelectorAll("#doing-list li");
@@ -29,6 +33,8 @@
         doingList.addEventListener("dragover", handleDragover, false);
         doneList.addEventListener("drop", handleDrop, false);
         doneList.addEventListener("dragover", handleDragover, false);
+
+        createTaskButton.addEventListener("click", launchTaskCreator, false);
 
         for (let i = 0; i < toDoListItems.length; i++) {
             // console.log(toDoListItems[i]);
@@ -88,6 +94,13 @@
         else {
             l.style.height = null;
         }
+    }
+
+    function launchTaskCreator() {
+        // Open a form containing:
+        // - Name of task
+        // - "Save"
+        // - "Cancel"
     }
 
 })();
