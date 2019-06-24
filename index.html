@@ -48,8 +48,17 @@
                 </table>
             </main>
             <!-- Modal box for entering new task details -->
-            <div id="create-task-modal">
-
+            <div id="create-task-wizard" class="modal-overlay">
+                <div class="modal-content">
+                    <span id="close-creator">&times;</span>
+                    <h2>Create a New Task</h2>
+                    <form action="#" id="create-task-form">
+                        <label for="task-name">Name of Task:</label>
+                        <input type="text" id="task-name" name="task-name">
+                        <br><br>
+                        <input type="submit" value="Add Task">
+                    </form>
+                </div>
             </div>
         </div>
     </body>

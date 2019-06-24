@@ -12,6 +12,11 @@
     var doneListItems;
 
     var createTaskButton;
+    var closeTaskCreatorButton;
+
+    var createTaskForm;
+
+    var createTaskWizard;
 
     function init() {
 
@@ -22,10 +27,15 @@
         lists = [toDoList, doingList, doneList];
 
         createTaskButton = document.querySelector("#create-task-button");
+        closeTaskCreatorButton = document.querySelector("#close-creator");
 
         toDoListItems = document.querySelectorAll("#to-do-list li");
         doingListItems = document.querySelectorAll("#doing-list li");
         doneListItems = document.querySelectorAll("#done-list li");
+
+        createTaskForm = document.querySelector("#create-task-form");
+
+        createTaskWizard = document.querySelector("#create-task-wizard");
 
         toDoList.addEventListener("drop", handleDrop, false);
         toDoList.addEventListener("dragover", handleDragover, false);
@@ -35,6 +45,8 @@
         doneList.addEventListener("dragover", handleDragover, false);
 
         createTaskButton.addEventListener("click", launchTaskCreator, false);
+        closeTaskCreatorButton.addEventListener("click", closeTaskCreator, false);
+        createTaskForm.addEventListener("submit", closeTaskCreator, false);
 
         for (let i = 0; i < toDoListItems.length; i++) {
             // console.log(toDoListItems[i]);
@@ -96,11 +108,21 @@
         }
     }
 
-    function launchTaskCreator() {
+    function launchTaskCreator(evt) {
         // Open a form containing:
         // - Name of task
         // - "Save"
         // - "Cancel"
+        createTaskWizard.style.display = "block";
+    }
+
+    function closeTaskCreator(evt) {
+        evt.preventDefault();
+        if (evt.type === "submit") {
+            var formData = new FormData(createTaskForm);
+            console.log(formData.get("task-name"));
+        }
+        createTaskWizard.style.display = "none";
     }
 
 })();
