@@ -109,10 +109,6 @@
     }
 
     function launchTaskCreator(evt) {
-        // Open a form containing:
-        // - Name of task
-        // - "Save"
-        // - "Cancel"
         createTaskWizard.style.display = "block";
     }
 
@@ -120,7 +116,13 @@
         evt.preventDefault();
         if (evt.type === "submit") {
             var formData = new FormData(createTaskForm);
-            console.log(formData.get("task-name"));
+            var newToDoItem = document.createElement("li");
+            var randomId = Math.round(Math.random() * 1000);
+            newToDoItem.id = "x" + randomId.toString();
+            newToDoItem.draggable = true;
+            newToDoItem.innerHTML = formData.get("task-name");
+            newToDoItem.addEventListener("dragstart", handleDragStart, false);
+            toDoList.appendChild(newToDoItem);
         }
         createTaskWizard.style.display = "none";
     }

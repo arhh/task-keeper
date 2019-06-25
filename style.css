@@ -23,6 +23,10 @@ table {
     height: 80%;
 }
 
+td {
+    width: 33%;
+}
+
 th {
     font-size: 5ex;
     background-color: #d9d9d9;
@@ -41,8 +45,11 @@ li {
     background-color: #a9fe30;
     margin-top: 5%;
     margin-bottom: 5%;
-    width: 20%;
+    width: 80%;
+    word-break: keep-all;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .modal-overlay {
