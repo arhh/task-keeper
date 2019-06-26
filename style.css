@@ -75,3 +75,9 @@ li {
     float: right;
     cursor: pointer;
 }
+
+.delete-item {
+    float: right;
+    color: #fe1d1d;
+    cursor: pointer;
+}

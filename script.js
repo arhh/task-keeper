@@ -112,6 +112,12 @@
         createTaskWizard.style.display = "block";
     }
 
+    function deleteItem(evt) {
+        var deleteCandidate = evt.target.parentNode;
+        var parentList = deleteCandidate.parentNode;
+        parentList.removeChild(deleteCandidate);
+    }
+
     function closeTaskCreator(evt) {
         evt.preventDefault();
         if (evt.type === "submit") {
@@ -122,6 +128,11 @@
             newToDoItem.draggable = true;
             newToDoItem.innerHTML = formData.get("task-name");
             newToDoItem.addEventListener("dragstart", handleDragStart, false);
+            var deleteButton = document.createElement("a");
+            deleteButton.className = "delete-item";
+            deleteButton.innerHTML = "&times;";
+            deleteButton.addEventListener("click", deleteItem, false);
+            newToDoItem.appendChild(deleteButton);
             toDoList.appendChild(newToDoItem);
         }
         createTaskWizard.style.display = "none";
