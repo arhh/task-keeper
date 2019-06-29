@@ -18,7 +18,9 @@ have completed the task, drag it to the **Done** lane.
 ## Current Limitations
 * Tasks must be carefully dragged onto the blue zones of a swim lane to be successfully dropped into the lane.
 
+## Known Issues
+* Dragging an item _onto_ another item will make the dragged item a _child_ of the other item, essentially sticking the two items together.
+
 ## Roadmap
-* Creation of new tasks.
-* Deleting of tasks that are no longer valid.
 * Editing tasks.
+* Local storing of tasks so as to maintain lists when a session is closed.
