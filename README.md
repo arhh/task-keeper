@@ -23,4 +23,4 @@ have completed the task, drag it to the **Done** lane.
 
 ## Roadmap
 * Editing tasks.
-* Local storing of tasks so as to maintain lists when a session is closed.
+* Maintenance of tasks over multiple browser sessions.
