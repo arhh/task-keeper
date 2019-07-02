@@ -1,7 +1,7 @@
 # Task Keeper
 
 ## What is Task Keeper
-Task Keeper is a Kanban board for helping you keep track of your work.
+Task Keeper is a Kanban-like board for helping you keep track of your work.
 
 There are three "swim lanes":
 * **To Do**: Lists tasks that you _will do_.
@@ -17,6 +17,7 @@ have completed the task, drag it to the **Done** lane.
 
 ## Current Limitations
 * Tasks must be carefully dragged onto the blue zones of a swim lane to be successfully dropped into the lane.
+* Tasks cannot be edited once created.
 
 ## Known Issues
 * Dragging an item _onto_ another item will make the dragged item a _child_ of the other item, essentially sticking the two items together.
