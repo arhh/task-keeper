@@ -72,7 +72,7 @@ li {
     margin-top: 20%;
 }
 
-#close-creator {
+.close-modal {
     float: right;
     cursor: pointer;
 }

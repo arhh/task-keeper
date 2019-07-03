@@ -6,6 +6,7 @@
         <script src="script.js"></script>
         <title>Task Keeper</title>
     </head>
+
     <body>
         <!-- App Header -->
         <header>
@@ -17,6 +18,7 @@
             <aside>
                 <button id="create-task-button">Create Task</button>
             </aside>
+
             <!-- Swim Lanes -->
             <main>
                 <table>
@@ -28,29 +30,30 @@
                     <tr>
                         <td>
                             <ul id="to-do-list">
-                                <!-- <li id="a" draggable="true">Will do A <a class="delete-item">&times;</a></li> -->
+                                <li id="a" draggable="true">Will do A <a class="delete-item">&times;</a></li>
                             </ul>
                         </td>
                         <td>
                             <ul id="doing-list">
-                                <!-- <li id="b" draggable="true">Doing B</li>
-                                <li id="c" draggable="true">Doing C</li> -->
+                                <li id="b" draggable="true">Doing B</li>
+                                <li id="c" draggable="true">Doing C</li>
                             </ul>
                         </td>
                         <td>
                             <ul id="done-list">
-                                <!-- <li id="d" draggable="true">Done D</li>
+                                <li id="d" draggable="true">Done D</li>
                                 <li id="e" draggable="true">Done E</li>
-                                <li id="f" draggable="true">Done F</li> -->
+                                <li id="f" draggable="true">Done F</li>
                             </ul>
                         </td>
                     </tr>
                 </table>
             </main>
+
             <!-- Modal box for entering new task details -->
-            <div id="create-task-wizard" class="modal-overlay">
+            <div id="create-task-modal" class="modal-overlay">
                 <div class="modal-content">
-                    <span id="close-creator">&times;</span>
+                    <span class="close-modal">&times;</span>
                     <h2>Create a New Task</h2>
                     <form action="#" id="create-task-form">
                         <label for="task-name">Name of Task:</label>
@@ -60,6 +63,9 @@
                     </form>
                 </div>
             </div>
+
         </div>
+
+
     </body>
 </html>

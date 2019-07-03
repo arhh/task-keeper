@@ -5,18 +5,16 @@
     var doingList;
     var doneList;
 
-    var lists;
-
-    var toDoListItems;
-    var doingListItems;
-    var doneListItems;
+    // var toDoListItems;
+    // var doingListItems;
+    // var doneListItems;
 
     var createTaskButton;
-    var closeTaskCreatorButton;
+    var createTaskModalCloseButton;
 
     var createTaskForm;
 
-    var createTaskWizard;
+    var createTaskModal;
 
     function init() {
 
@@ -24,18 +22,16 @@
         doingList = document.querySelector("#doing-list");
         doneList = document.querySelector("#done-list");
 
-        lists = [toDoList, doingList, doneList];
-
         createTaskButton = document.querySelector("#create-task-button");
-        closeTaskCreatorButton = document.querySelector("#close-creator");
+        createTaskModalCloseButton = document.querySelector("#create-task-modal .close-modal");
 
-        toDoListItems = document.querySelectorAll("#to-do-list li");
-        doingListItems = document.querySelectorAll("#doing-list li");
-        doneListItems = document.querySelectorAll("#done-list li");
+        // toDoListItems = document.querySelectorAll("#to-do-list li");
+        // doingListItems = document.querySelectorAll("#doing-list li");
+        // doneListItems = document.querySelectorAll("#done-list li");
 
         createTaskForm = document.querySelector("#create-task-form");
 
-        createTaskWizard = document.querySelector("#create-task-wizard");
+        createTaskModal = document.querySelector("#create-task-modal");
 
         toDoList.addEventListener("drop", handleDrop, false);
         toDoList.addEventListener("dragover", handleDragover, false);
@@ -45,22 +41,22 @@
         doneList.addEventListener("dragover", handleDragover, false);
 
         createTaskButton.addEventListener("click", launchTaskCreator, false);
-        closeTaskCreatorButton.addEventListener("click", closeTaskCreator, false);
+        createTaskModalCloseButton.addEventListener("click", closeTaskCreator, false);
         createTaskForm.addEventListener("submit", closeTaskCreator, false);
 
-        for (let i = 0; i < toDoListItems.length; i++) {
+        for (let i = 0; i < toDoList.childElementCount; i++) {
             // console.log(toDoListItems[i]);
-            toDoListItems[i].addEventListener("dragstart", handleDragStart, false);
+            toDoList.children[i].addEventListener("dragstart", handleDragStart, false);
         }
 
-        for (let i = 0; i < doingListItems.length; i++) {
-            // console.log(doingListItems[i]);
-            doingListItems[i].addEventListener("dragstart", handleDragStart, false);
+        for (let i = 0; i < doingList.childElementCount; i++) {
+            console.log(doingList.children[i]);
+            doingList.children[i].addEventListener("dragstart", handleDragStart, false);
         }
 
-        for (let i = 0; i < doneListItems.length; i++) {
+        for (let i = 0; i < doneList.childElementCount; i++) {
             // console.log(doneListItems[i]);
-            doneListItems[i].addEventListener("dragstart", handleDragStart, false);
+            doneList.children[i].addEventListener("dragstart", handleDragStart, false);
         }
     }
 
@@ -91,13 +87,6 @@
         evt.preventDefault();
     }
 
-    function monitorLists() {
-        for (var i = 0; i < lists.length; i++) {
-            var list = lists[i];
-            checkIsEmpty(list);
-        }
-    }
-
     function checkIsEmpty(l) {
         console.log(l);
         if (l.children.length <= 1) {
@@ -109,7 +98,7 @@
     }
 
     function launchTaskCreator(evt) {
-        createTaskWizard.style.display = "block";
+        createTaskModal.style.display = "block";
     }
 
     function deleteItem(evt) {
@@ -135,7 +124,7 @@
             newToDoItem.appendChild(deleteButton);
             toDoList.appendChild(newToDoItem);
         }
-        createTaskWizard.style.display = "none";
+        createTaskModal.style.display = "none";
     }
 
 })();
