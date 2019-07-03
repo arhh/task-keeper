@@ -8,9 +8,11 @@
 
         mainAppWindow = {
             createTaskButton: document.querySelector("#create-task-button"),
-            toDoList: document.querySelector("#to-do-list"),
-            doingList: document.querySelector("#doing-list"),
-            doneList: document.querySelector("#done-list")
+            lists: {
+                toDoList: document.querySelector("#to-do-list"),
+                doingList: document.querySelector("#doing-list"),
+                doneList: document.querySelector("#done-list")
+            }
         };
 
         createTaskModal = {
@@ -19,31 +21,49 @@
             form: document.querySelector("#create-task-form")
         };
 
-        mainAppWindow.toDoList.addEventListener("drop", handleDrop, false);
-        mainAppWindow.toDoList.addEventListener("dragover", handleDragover, false);
-        mainAppWindow.doingList.addEventListener("drop", handleDrop, false);
-        mainAppWindow.doingList.addEventListener("dragover", handleDragover, false);
-        mainAppWindow.doneList.addEventListener("drop", handleDrop, false);
-        mainAppWindow.doneList.addEventListener("dragover", handleDragover, false);
+        // for (var key in mainAppWindow.lists) {
+        //     if (mainAppWindow.lists.hasOwnProperty(key)) {
+        //         var list = mainAppWindow.lists[key];
+        //         // console.log(typeof(mainAppWindow.lists[list]));
+        //         enableDropZoneForElement(list);
+        //         enableDragForListItems(list);
+        //     }
+        // }
+
+        function makeListItemsDraggable() {
+            for (var key in mainAppWindow.lists) {
+                if (mainAppWindow.lists.hasOwnProperty(key)) {
+                    var list = mainAppWindow.lists[key];
+                    // console.log(list);
+                    for (var i = 0; i < list.childElementCount; i++) {
+                        // console.log(list.children[i]);
+                        list.children[i].addEventListener("dragstart", handleDragStart, false);
+                    }
+                }
+            }
+        }
+
+        function enableDropZoneForLists() {
+            // elt.addEventListener("drop", handleDrop, false);
+            // elt.addEventListener("dragover", handleDragover, false);
+            for (var key in mainAppWindow.lists) {
+                if (mainAppWindow.lists.hasOwnProperty(key)) {
+                    var list = mainAppWindow.lists[key];
+                    // console.log(list);
+                    list.addEventListener("drop", handleDrop, false);
+                    list.addEventListener("dragover", handleDragover, false);
+                }
+            }
+        }
+
         mainAppWindow.createTaskButton.addEventListener("click", launchTaskCreator, false);
 
         createTaskModal.close.addEventListener("click", closeTaskCreator, false);
         createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
 
-        for (let i = 0; i < mainAppWindow.toDoList.childElementCount; i++) {
-            // console.log(toDoListItems[i]);
-            mainAppWindow.toDoList.children[i].addEventListener("dragstart", handleDragStart, false);
-        }
 
-        for (let i = 0; i < mainAppWindow.doingList.childElementCount; i++) {
-            console.log(mainAppWindow.doingList.children[i]);
-            mainAppWindow.doingList.children[i].addEventListener("dragstart", handleDragStart, false);
-        }
-
-        for (let i = 0; i < mainAppWindow.doneList.childElementCount; i++) {
-            // console.log(doneListItems[i]);
-            mainAppWindow.doneList.children[i].addEventListener("dragstart", handleDragStart, false);
-        }
+        makeListItemsDraggable();
+        enableDropZoneForLists();
     }
 
     // Store the id of the item being dragged and set the mouse cursor.
@@ -108,7 +128,7 @@
             deleteButton.innerHTML = "&times;";
             deleteButton.addEventListener("click", deleteItem, false);
             newToDoItem.appendChild(deleteButton);
-            mainAppWindow.toDoList.appendChild(newToDoItem);
+            mainAppWindow.lists.toDoList.appendChild(newToDoItem);
         }
         createTaskModal.modal.style.display = "none";
     }
