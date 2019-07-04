@@ -4,6 +4,20 @@
     var mainAppContent;
     var createTaskModal;
 
+    class Item {
+        constructor(name) {
+            this.id = "x" + Math.round(Math.random() * 1000).toString();
+            this.name = name;
+            this.status = "todo";
+        }
+        get id() { return this.id; }
+        set id(newId) { this.id = newId; }
+        get name() { return this.name; }
+        set name(newName) { this.name = name; }
+        get status() { return this.status; }
+        set status(newStatus) { this.status = newStatus; }
+    }
+
     function init() {
 
         mainAppContent = {
@@ -21,13 +35,14 @@
             form: document.querySelector("#create-task-form")
         };
 
-        // Must retrieve locally stored items here before continuing
-
         setUpMainAppContent();
         setUpCreateTaskModal();
     }
 
     function setUpMainAppContent() {
+
+        // Must retrieve locally stored items here before continuing
+
         makeItemsDraggable();
         enableDropZoneForLists();
 
