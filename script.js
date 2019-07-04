@@ -1,12 +1,12 @@
 (function () {
     window.addEventListener("DOMContentLoaded", init, false);
 
-    var mainAppWindow;
+    var mainAppContent;
     var createTaskModal;
 
     function init() {
 
-        mainAppWindow = {
+        mainAppContent = {
             createTaskButton: document.querySelector("#create-task-button"),
             lists: {
                 toDoList: document.querySelector("#to-do-list"),
@@ -21,19 +21,27 @@
             form: document.querySelector("#create-task-form")
         };
 
-        // for (var key in mainAppWindow.lists) {
-        //     if (mainAppWindow.lists.hasOwnProperty(key)) {
-        //         var list = mainAppWindow.lists[key];
-        //         // console.log(typeof(mainAppWindow.lists[list]));
-        //         enableDropZoneForElement(list);
-        //         enableDragForListItems(list);
-        //     }
-        // }
+        // Must retrieve locally stored items here before continuing
 
-        function makeListItemsDraggable() {
-            for (var key in mainAppWindow.lists) {
-                if (mainAppWindow.lists.hasOwnProperty(key)) {
-                    var list = mainAppWindow.lists[key];
+        setUpMainAppContent();
+        setUpCreateTaskModal();
+
+        function setUpMainAppContent() {
+            makeItemsDraggable();
+            enableDropZoneForLists();
+
+            mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
+        }
+
+        function setUpCreateTaskModal() {
+            createTaskModal.close.addEventListener("click", closeTaskCreator, false);
+            createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
+        }
+
+        function makeItemsDraggable() {
+            for (var key in mainAppContent.lists) {
+                if (mainAppContent.lists.hasOwnProperty(key)) {
+                    var list = mainAppContent.lists[key];
                     // console.log(list);
                     for (var i = 0; i < list.childElementCount; i++) {
                         // console.log(list.children[i]);
@@ -44,26 +52,15 @@
         }
 
         function enableDropZoneForLists() {
-            // elt.addEventListener("drop", handleDrop, false);
-            // elt.addEventListener("dragover", handleDragover, false);
-            for (var key in mainAppWindow.lists) {
-                if (mainAppWindow.lists.hasOwnProperty(key)) {
-                    var list = mainAppWindow.lists[key];
+            for (var key in mainAppContent.lists) {
+                if (mainAppContent.lists.hasOwnProperty(key)) {
+                    var list = mainAppContent.lists[key];
                     // console.log(list);
                     list.addEventListener("drop", handleDrop, false);
                     list.addEventListener("dragover", handleDragover, false);
                 }
             }
         }
-
-        mainAppWindow.createTaskButton.addEventListener("click", launchTaskCreator, false);
-
-        createTaskModal.close.addEventListener("click", closeTaskCreator, false);
-        createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
-
-
-        makeListItemsDraggable();
-        enableDropZoneForLists();
     }
 
     // Store the id of the item being dragged and set the mouse cursor.
@@ -128,7 +125,7 @@
             deleteButton.innerHTML = "&times;";
             deleteButton.addEventListener("click", deleteItem, false);
             newToDoItem.appendChild(deleteButton);
-            mainAppWindow.lists.toDoList.appendChild(newToDoItem);
+            mainAppContent.lists.toDoList.appendChild(newToDoItem);
         }
         createTaskModal.modal.style.display = "none";
     }
