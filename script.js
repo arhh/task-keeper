@@ -6,16 +6,9 @@
 
     class Item {
         constructor(name) {
-            this.id = "x" + Math.round(Math.random() * 1000).toString();
+            this.id = ('X' + (Math.round(Math.random() * 10000)).toString());
             this.name = name;
-            this.status = "todo";
         }
-        get id() { return this.id; }
-        set id(newId) { this.id = newId; }
-        get name() { return this.name; }
-        set name(newName) { this.name = name; }
-        get status() { return this.status; }
-        set status(newStatus) { this.status = newStatus; }
     }
 
     function init() {
@@ -127,22 +120,32 @@
 
     function closeTaskCreator(evt) {
         evt.preventDefault();
+
         if (evt.type === "submit") {
             var formData = new FormData(createTaskModal.form);
-            var newToDoItem = document.createElement("li");
-            var randomId = Math.round(Math.random() * 1000);
-            newToDoItem.id = "x" + randomId.toString();
-            newToDoItem.draggable = true;
-            newToDoItem.innerHTML = formData.get("task-name");
-            newToDoItem.addEventListener("dragstart", handleDragStart, false);
-            var deleteButton = document.createElement("a");
-            deleteButton.className = "delete-item";
-            deleteButton.innerHTML = "&times;";
-            deleteButton.addEventListener("click", deleteItem, false);
-            newToDoItem.appendChild(deleteButton);
-            mainAppContent.lists.toDoList.appendChild(newToDoItem);
+            var itemName = formData.get("task-name");
+            createItem(itemName);
         }
         createTaskModal.modal.style.display = "none";
+    }
+
+    function createItem(itemName) {
+        var newItem = new Item(itemName);
+
+        var newElement = document.createElement("li");
+        newElement.id = newItem.id;
+        newElement.draggable = true;
+        newElement.innerHTML = newItem.name;
+        newElement.addEventListener("dragstart", handleDragStart, false);
+
+        var deleteButton = document.createElement("a");
+        deleteButton.className = "delete-item";
+        deleteButton.innerHTML = "&times;";
+        deleteButton.addEventListener("click", deleteItem, false);
+
+        newElement.appendChild(deleteButton);
+
+        mainAppContent.lists.toDoList.appendChild(newElement);
     }
 
 })();
