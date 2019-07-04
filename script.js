@@ -25,39 +25,39 @@
 
         setUpMainAppContent();
         setUpCreateTaskModal();
+    }
 
-        function setUpMainAppContent() {
-            makeItemsDraggable();
-            enableDropZoneForLists();
+    function setUpMainAppContent() {
+        makeItemsDraggable();
+        enableDropZoneForLists();
 
-            mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
-        }
+        mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
+    }
 
-        function setUpCreateTaskModal() {
-            createTaskModal.close.addEventListener("click", closeTaskCreator, false);
-            createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
-        }
+    function setUpCreateTaskModal() {
+        createTaskModal.close.addEventListener("click", closeTaskCreator, false);
+        createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
+    }
 
-        function makeItemsDraggable() {
-            for (var key in mainAppContent.lists) {
-                if (mainAppContent.lists.hasOwnProperty(key)) {
-                    var list = mainAppContent.lists[key];
-                    // console.log(list);
-                    for (var i = 0; i < list.childElementCount; i++) {
-                        // console.log(list.children[i]);
-                        list.children[i].addEventListener("dragstart", handleDragStart, false);
-                    }
-                }
+    function enableDropZoneForLists() {
+        for (var key in mainAppContent.lists) {
+            if (mainAppContent.lists.hasOwnProperty(key)) {
+                var list = mainAppContent.lists[key];
+                // console.log(list);
+                list.addEventListener("drop", handleDrop, false);
+                list.addEventListener("dragover", handleDragover, false);
             }
         }
+    }
 
-        function enableDropZoneForLists() {
-            for (var key in mainAppContent.lists) {
-                if (mainAppContent.lists.hasOwnProperty(key)) {
-                    var list = mainAppContent.lists[key];
-                    // console.log(list);
-                    list.addEventListener("drop", handleDrop, false);
-                    list.addEventListener("dragover", handleDragover, false);
+    function makeItemsDraggable() {
+        for (var key in mainAppContent.lists) {
+            if (mainAppContent.lists.hasOwnProperty(key)) {
+                var list = mainAppContent.lists[key];
+                // console.log(list);
+                for (var i = 0; i < list.childElementCount; i++) {
+                    // console.log(list.children[i]);
+                    list.children[i].addEventListener("dragstart", handleDragStart, false);
                 }
             }
         }
