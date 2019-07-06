@@ -85,12 +85,12 @@
         evt.preventDefault();
 
         var previousList = evt.dataTransfer.getData("previousList");
-        checkIsEmpty(document.querySelector("#" + previousList));
+        checkListIsEmpty(document.querySelector("#" + previousList));
 
         var draggedElement = evt.dataTransfer.getData("listTask");
         evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
 
-        checkIsEmpty(evt.target);
+        checkListIsEmpty(evt.target);
     }
 
     // When element/cursor hovers over drop zone, prevent browser intervening.
@@ -98,7 +98,7 @@
         evt.preventDefault();
     }
 
-    function checkIsEmpty(l) {
+    function checkListIsEmpty(l) {
         console.log(l);
         if (l.children.length <= 1) {
             l.style.height = "50px";
