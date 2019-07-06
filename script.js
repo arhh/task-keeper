@@ -112,12 +112,6 @@
         createTaskModal.modal.style.display = "block";
     }
 
-    function deleteTask(evt) {
-        var deleteCandidate = evt.target.parentNode;
-        var parentList = deleteCandidate.parentNode;
-        parentList.removeChild(deleteCandidate);
-    }
-
     function closeTaskCreator(evt) {
         evt.preventDefault();
 
@@ -146,6 +140,12 @@
         newElement.appendChild(deleteButton);
 
         mainAppContent.lists.toDoList.appendChild(newElement);
+    }
+
+    function deleteTask(evt) {
+        var taskToDelete = evt.target.parentNode;
+        var parentList = taskToDelete.parentNode;
+        parentList.removeChild(taskToDelete);
     }
 
 })();
