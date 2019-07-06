@@ -140,12 +140,21 @@
         newElement.appendChild(deleteButton);
 
         mainAppContent.lists.toDoList.appendChild(newElement);
+
+        storeTaskToDisk(newTask);
     }
 
     function deleteTask(evt) {
         var taskToDelete = evt.target.parentNode;
         var parentList = taskToDelete.parentNode;
+
         parentList.removeChild(taskToDelete);
+
+        localStorage.removeItem(taskToDelete.id);
+    }
+
+    function storeTaskToDisk(task) {
+        localStorage.setItem(task.id, task.name);
     }
 
 })();
