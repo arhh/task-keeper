@@ -4,7 +4,7 @@
     var mainAppContent;
     var createTaskModal;
 
-    class Item {
+    class Task {
         constructor(name) {
             this.id = ('X' + (Math.round(Math.random() * 10000)).toString());
             this.name = name;
@@ -34,9 +34,9 @@
 
     function setUpMainAppContent() {
 
-        // Must retrieve locally stored items here before continuing
+        // Must retrieve locally stored tasks here before continuing
 
-        makeItemsDraggable();
+        makeTasksDraggable();
         enableDropZoneForLists();
 
         mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
@@ -58,7 +58,7 @@
         }
     }
 
-    function makeItemsDraggable() {
+    function makeTasksDraggable() {
         for (var key in mainAppContent.lists) {
             if (mainAppContent.lists.hasOwnProperty(key)) {
                 var list = mainAppContent.lists[key];
@@ -71,23 +71,23 @@
         }
     }
 
-    // Store the id of the item being dragged and set the mouse cursor.
-    // Called when item is "lifted" by cursor.
+    // Store the id of the Task being dragged and set the mouse cursor.
+    // Called when Task is "lifted" by cursor.
     function handleDragStart(evt) {
-        evt.dataTransfer.setData("listItem", evt.target.id);
+        evt.dataTransfer.setData("listTask", evt.target.id);
         evt.dataTransfer.setData("previousList", evt.target.parentNode.id);
     }
 
-    // Get the element that's stored (i.e. the item being dragged) and append
+    // Get the element that's stored (i.e. the Task being dragged) and append
     // to target (i.e. the target list).
-    // The item being dragged is automatically removed from the previous parent.
+    // The Task being dragged is automatically removed from the previous parent.
     function handleDrop(evt) {
         evt.preventDefault();
 
         var previousList = evt.dataTransfer.getData("previousList");
         checkIsEmpty(document.querySelector("#" + previousList));
 
-        var draggedElement = evt.dataTransfer.getData("listItem");
+        var draggedElement = evt.dataTransfer.getData("listTask");
         evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
 
         checkIsEmpty(evt.target);
@@ -112,7 +112,7 @@
         createTaskModal.modal.style.display = "block";
     }
 
-    function deleteItem(evt) {
+    function deleteTask(evt) {
         var deleteCandidate = evt.target.parentNode;
         var parentList = deleteCandidate.parentNode;
         parentList.removeChild(deleteCandidate);
@@ -123,25 +123,25 @@
 
         if (evt.type === "submit") {
             var formData = new FormData(createTaskModal.form);
-            var itemName = formData.get("task-name");
-            createItem(itemName);
+            var taskName = formData.get("task-name");
+            createTask(taskName);
         }
         createTaskModal.modal.style.display = "none";
     }
 
-    function createItem(itemName) {
-        var newItem = new Item(itemName);
+    function createTask(taskName) {
+        var newTask = new Task(taskName);
 
         var newElement = document.createElement("li");
-        newElement.id = newItem.id;
+        newElement.id = newTask.id;
         newElement.draggable = true;
-        newElement.innerHTML = newItem.name;
+        newElement.innerHTML = newTask.name;
         newElement.addEventListener("dragstart", handleDragStart, false);
 
         var deleteButton = document.createElement("a");
-        deleteButton.className = "delete-item";
+        deleteButton.className = "delete-task";
         deleteButton.innerHTML = "&times;";
-        deleteButton.addEventListener("click", deleteItem, false);
+        deleteButton.addEventListener("click", deleteTask, false);
 
         newElement.appendChild(deleteButton);
 

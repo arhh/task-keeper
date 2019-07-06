@@ -77,7 +77,7 @@ li {
     cursor: pointer;
 }
 
-.delete-item {
+.delete-task {
     float: right;
     color: #fe1d1d;
     cursor: pointer;
