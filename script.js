@@ -8,11 +8,24 @@
         constructor(name) {
             this.id = ('X' + (Math.round(Math.random() * 10000)).toString());
             this.name = name;
+            this.state = 'to-do';
+        }
+
+        toDOMElement(elementType) {
+            var element = document.createElement(elementType);
+            element.id = this.id;
+            element.innerHTML = this.name;
+
+            return element;
+        }
+
+        nameAndStateToJSON() {
+            console.log(JSON.stringify(`{name: ${this.name}, state: ${this.state}}`));
+            return JSON.stringify(`{name: ${this.name}, state: ${this.state}}`);
         }
     }
 
     function init() {
-
         mainAppContent = {
             createTaskButton: document.querySelector("#create-task-button"),
             lists: {
@@ -65,7 +78,7 @@
                 // console.log(list);
                 for (var i = 0; i < list.childElementCount; i++) {
                     // console.log(list.children[i]);
-                    list.children[i].addEventListener("dragstart", handleDragStart, false);
+                    makeElementDraggable(list.children[i]);
                 }
             }
         }
@@ -125,21 +138,18 @@
 
     function createTask(taskName) {
         var newTask = new Task(taskName);
-
-        var newElement = document.createElement("li");
-        newElement.id = newTask.id;
-        newElement.draggable = true;
-        newElement.innerHTML = newTask.name;
-        newElement.addEventListener("dragstart", handleDragStart, false);
+        var newTaskElement = newTask.toDOMElement('li');
+        // console.log(newTaskElement);
+        makeElementDraggable(newTaskElement);
 
         var deleteButton = document.createElement("a");
         deleteButton.className = "delete-task";
         deleteButton.innerHTML = "&times;";
         deleteButton.addEventListener("click", deleteTask, false);
 
-        newElement.appendChild(deleteButton);
+        newTaskElement.appendChild(deleteButton);
 
-        mainAppContent.lists.toDoList.appendChild(newElement);
+        mainAppContent.lists.toDoList.appendChild(newTaskElement);
 
         storeTaskToDisk(newTask);
     }
@@ -153,8 +163,13 @@
         localStorage.removeItem(taskToDelete.id);
     }
 
+    function makeElementDraggable(taskElement) {
+        taskElement.draggable = true;
+        taskElement.addEventListener("dragstart", handleDragStart, false);
+    }
+
     function storeTaskToDisk(task) {
-        localStorage.setItem(task.id, task.name);
+        localStorage.setItem(task.id, task.nameAndStateToJSON());
     }
 
 })();
