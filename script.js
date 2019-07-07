@@ -5,10 +5,10 @@
     var createTaskModal;
 
     class Task {
-        constructor(name) {
-            this.id = ('X' + (Math.round(Math.random() * 10000)).toString());
+        constructor(name, id, status) {
+            this.id = id;
             this.name = name;
-            this.state = 'to-do';
+            this.status = status;
         }
 
         toDOMElement(elementType) {
@@ -19,9 +19,9 @@
             return element;
         }
 
-        nameAndStateToJSON() {
-            console.log(JSON.stringify(`{name: ${this.name}, state: ${this.state}}`));
-            return JSON.stringify(`{name: ${this.name}, state: ${this.state}}`);
+        toObjectNotation() {
+            console.log({id: this.id, name: this.name, status: this.status});
+            return {id: this.id, name: this.name, status: this.status};
         }
     }
 
@@ -29,9 +29,9 @@
         mainAppContent = {
             createTaskButton: document.querySelector("#create-task-button"),
             lists: {
-                toDoList: document.querySelector("#to-do-list"),
-                doingList: document.querySelector("#doing-list"),
-                doneList: document.querySelector("#done-list")
+                toDoList: document.querySelector("#to-do"),
+                doingList: document.querySelector("#doing"),
+                doneList: document.querySelector("#done")
             }
         };
 
@@ -51,6 +51,8 @@
 
         makeTasksDraggable();
         enableDropZoneForLists();
+
+        loadTasksFromDisk();
 
         mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
     }
@@ -84,11 +86,27 @@
         }
     }
 
+// {x524: {name: 'hi', status: 'done'}, x2: {name: 'hid', status: 'done'}}
+
+    function loadTasksFromDisk() {
+        var taskList = localStorage.getItem("tasks");
+        if (taskList !== null) {
+            taskList = JSON.parse(taskList);
+            for (var id in taskList) {
+                if (taskList.hasOwnProperty(id)) {
+                    var taskObject = createTask(taskList[id].name, id, taskList[id].status);
+                    addTaskToDOM(taskObject);
+                }
+            }
+        }
+        else { localStorage.setItem("tasks", JSON.stringify({})); }
+    }
+
     // Store the id of the Task being dragged and set the mouse cursor.
     // Called when Task is "lifted" by cursor.
     function handleDragStart(evt) {
-        evt.dataTransfer.setData("listTask", evt.target.id);
-        evt.dataTransfer.setData("previousList", evt.target.parentNode.id);
+        evt.dataTransfer.setData("listTaskId", evt.target.id);
+        evt.dataTransfer.setData("sourceListId", evt.target.parentNode.id);
     }
 
     // Get the element that's stored (i.e. the Task being dragged) and append
@@ -97,13 +115,16 @@
     function handleDrop(evt) {
         evt.preventDefault();
 
-        var previousList = evt.dataTransfer.getData("previousList");
-        checkListIsEmpty(document.querySelector("#" + previousList));
+        var sourceListId = evt.dataTransfer.getData("sourceListId");
+        var targetList = evt.target;
+        checkListIsEmpty(document.querySelector("#" + sourceListId));
 
-        var draggedElement = evt.dataTransfer.getData("listTask");
-        evt.target.insertBefore(document.querySelector("#" + draggedElement), evt.target.childNodes[0]);
+        var draggedTaskId = evt.dataTransfer.getData("listTaskId");
+        targetList.insertBefore(document.querySelector("#" + draggedTaskId), evt.target.childNodes[0]);
 
-        checkListIsEmpty(evt.target);
+        updateTaskStatus(draggedTaskId, targetList.id);
+
+        checkListIsEmpty(targetList);
     }
 
     // When element/cursor hovers over drop zone, prevent browser intervening.
@@ -121,6 +142,14 @@
         }
     }
 
+    function updateTaskStatus(taskElementId, newStatus) {
+        console.log(typeof(taskElementId));
+        var tasks = JSON.parse(localStorage.getItem("tasks"));
+        console.log(tasks);
+        tasks[taskElementId].status = newStatus;
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
     function launchTaskCreator(evt) {
         createTaskModal.modal.style.display = "block";
     }
@@ -130,18 +159,27 @@
 
         if (evt.type === "submit") {
             var formData = new FormData(createTaskModal.form);
-            var taskName = formData.get("task-name");
-            createTask(taskName);
+            var newTaskName = formData.get("task-name");
+            var newTaskObject = createTask(newTaskName);
+            addTaskToDOM(newTaskObject);
         }
         createTaskModal.modal.style.display = "none";
     }
 
-    function createTask(taskName) {
-        var newTask = new Task(taskName);
-        var newTaskElement = newTask.toDOMElement('li');
+    function createTask(name, id = null, status = "to-do") {
+        if (id === null) {
+            id = ("X" + (Math.round(Math.random() * 10000)).toString());
+        }
+        newTask = new Task(name, id, status);
+        return newTask;
+    }
+
+    function addTaskToDOM(task) {
+        var newTaskElement = task.toDOMElement('li');
         // console.log(newTaskElement);
         makeElementDraggable(newTaskElement);
 
+        // Create the "X" button for deleting
         var deleteButton = document.createElement("a");
         deleteButton.className = "delete-task";
         deleteButton.innerHTML = "&times;";
@@ -149,9 +187,25 @@
 
         newTaskElement.appendChild(deleteButton);
 
-        mainAppContent.lists.toDoList.appendChild(newTaskElement);
+        var taskStatus = task.status;
 
-        storeTaskToDisk(newTask);
+        switch (taskStatus) {
+            case "to-do":
+                mainAppContent.lists.toDoList.appendChild(newTaskElement);
+                storeTaskToDisk(newTask);
+                break;
+            case "doing":
+                mainAppContent.lists.doingList.appendChild(newTaskElement);
+                storeTaskToDisk(newTask);
+                break;
+            case "done":
+                mainAppContent.lists.doneList.appendChild(newTaskElement);
+                storeTaskToDisk(newTask);
+                break;
+            default:
+                console.error("No matching swim lane for task status");
+                console.error(`Task Status: ${taskStatus}`);
+        }
     }
 
     function deleteTask(evt) {
@@ -160,7 +214,10 @@
 
         parentList.removeChild(taskToDelete);
 
-        localStorage.removeItem(taskToDelete.id);
+        var tasks = JSON.parse(localStorage.getItem("tasks"));
+        delete tasks[taskToDelete.id];
+
+        localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 
     function makeElementDraggable(taskElement) {
@@ -169,7 +226,9 @@
     }
 
     function storeTaskToDisk(task) {
-        localStorage.setItem(task.id, task.nameAndStateToJSON());
+        var tasks = JSON.parse(localStorage.getItem("tasks"));
+        tasks[task.id] = {name: task.name, status: task.status};
+        localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 
 })();
