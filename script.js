@@ -1,9 +1,23 @@
+// Don't polute the global variable space with the variables here.
 (function () {
+    // Only run script once DOM has finished loading.
     window.addEventListener("DOMContentLoaded", init, false);
 
+    // Two variables representing:
+    //     a) The main application (i.e. The three swim lanes)
+    //     b) The "create task" modal (i.e. The pop-up for creating new tasks)
     var mainAppContent;
     var createTaskModal;
 
+    /**
+     * Class representing a Task.
+     *
+     * A "Task" is something to do (e.g. Hanging out the clothes)
+     *
+     * @param {string} id A unique identifier for the task.
+     * @param {string} name The user-defined name for the task.
+     * @param {string} status Whether the task is to-do, being done, or done.
+     */
     class Task {
         constructor(name, id, status) {
             this.id = id;
@@ -11,6 +25,16 @@
             this.status = status;
         }
 
+        /**
+         * Generate a HTML element from this Task.
+         *
+         * The object id is the element id, and the object name is inserted as
+         * text within the element.
+         * Note: The object's status is *not* captured in the element.
+         *
+         * @param {string} elementType The type of element to create (e.g. h1).
+         * @returns {string} The HTML element representing this object.
+         */
         toDOMElement(elementType) {
             var element = document.createElement(elementType);
             element.id = this.id;
@@ -19,6 +43,11 @@
             return element;
         }
 
+        /**
+         * Generate a JavaScript object representation of this Task.
+         *
+         * @returns {object} The JavaScript object representing this Task.
+         */
         toObjectNotation() {
             console.log({id: this.id, name: this.name, status: this.status});
             return {id: this.id, name: this.name, status: this.status};
