@@ -54,7 +54,16 @@
         }
     }
 
+    /**
+     * Function to set up the application environment.
+     *
+     * This function delegates most of the set up work to other functions.
+     * What it doesn't delegate is the creation of JavaScript objects to
+     * represent the DOM elements that are dynamically modified.
+     */
     function init() {
+        // Object containing the DOM elements that are interacted with
+        // on the main application view.
         mainAppContent = {
             createTaskButton: document.querySelector("#create-task-button"),
             lists: {
@@ -64,58 +73,84 @@
             }
         };
 
+        // Object containing the DOM elements of the "create task" pop-up.
         createTaskModal = {
             modal: document.querySelector("#create-task-modal"),
             close: document.querySelector("#create-task-modal .close-modal"),
             form: document.querySelector("#create-task-form")
         };
 
+        // Call two functions to complete the set up of the application views.
         setUpMainAppContent();
         setUpCreateTaskModal();
     }
 
+    /**
+     * Function to set up main application view.
+     */
     function setUpMainAppContent() {
-
-        // Must retrieve locally stored tasks here before continuing
-
+        // Add drag and drop functionality to each Task item in the swim lanes.
         makeTasksDraggable();
+
+        // Allow HTML elements to be "dropped" onto the swim lanes.
         enableDropZoneForLists();
 
+        // Check for, and load any tasks that were previously saved to
+        // localStorage.
         loadTasksFromDisk();
 
+        // Add an event listener to the "create task" button, which opens the
+        // "create task" pop-up dialogue.
         mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
     }
 
+    /**
+     * Function to set up the "create task" pop-up view.
+     *
+     * This function adds event listeners to the "submit" and "close" buttons
+     * of this dialogue box.
+     */
     function setUpCreateTaskModal() {
         createTaskModal.close.addEventListener("click", closeTaskCreator, false);
         createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
     }
 
+    /**
+     * Function which adds appropriate "Drag and Drop API" event listeners to
+     * the swim lanes so Task items can be "dropped" and attached onto them.
+     *
+     * The two events that are required in the HTML5 Drag and Drop API are:
+     * "drop": When an element is released while over a swim lane.
+     * "dragover": When an element is dragged over and hovering above a swim
+     *     lane.
+     */
     function enableDropZoneForLists() {
         for (var key in mainAppContent.lists) {
             if (mainAppContent.lists.hasOwnProperty(key)) {
                 var list = mainAppContent.lists[key];
-                // console.log(list);
                 list.addEventListener("drop", handleDrop, false);
                 list.addEventListener("dragover", handleDragover, false);
             }
         }
     }
 
+    /**
+     * Function to iterate over each Task and make them "draggable" as defined
+     * by the HTML5 Drag and Drop API.
+     *
+     * This function delegates the actual work of "enabling" drag and drop
+     * functionality to another function: makeElementDraggable().
+     */
     function makeTasksDraggable() {
         for (var key in mainAppContent.lists) {
             if (mainAppContent.lists.hasOwnProperty(key)) {
                 var list = mainAppContent.lists[key];
-                // console.log(list);
                 for (var i = 0; i < list.childElementCount; i++) {
-                    // console.log(list.children[i]);
                     makeElementDraggable(list.children[i]);
                 }
             }
         }
     }
-
-// {x524: {name: 'hi', status: 'done'}, x2: {name: 'hid', status: 'done'}}
 
     function loadTasksFromDisk() {
         var taskList = localStorage.getItem("tasks");
@@ -162,7 +197,6 @@
     }
 
     function checkListIsEmpty(l) {
-        console.log(l);
         if (l.children.length <= 1) {
             l.style.height = "50px";
         }
@@ -172,9 +206,7 @@
     }
 
     function updateTaskStatus(taskElementId, newStatus) {
-        console.log(typeof(taskElementId));
         var tasks = JSON.parse(localStorage.getItem("tasks"));
-        console.log(tasks);
         tasks[taskElementId].status = newStatus;
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
@@ -205,7 +237,6 @@
 
     function addTaskToDOM(task) {
         var newTaskElement = task.toDOMElement('li');
-        // console.log(newTaskElement);
         makeElementDraggable(newTaskElement);
 
         // Create the "X" button for deleting
