@@ -126,6 +126,7 @@
      */
     function enableDropZoneForLists() {
         for (var key in mainAppContent.lists) {
+            // Ignore any "key" that is part of the mainAppContent superclass.
             if (mainAppContent.lists.hasOwnProperty(key)) {
                 var list = mainAppContent.lists[key];
                 list.addEventListener("drop", handleDrop, false);
@@ -143,7 +144,10 @@
      */
     function makeTasksDraggable() {
         for (var key in mainAppContent.lists) {
+            // Ignore any "key" that is part of the mainAppContent superclass.
             if (mainAppContent.lists.hasOwnProperty(key)) {
+                // Iterate over each list (aka. swim lane) and make each
+                // containing task "draggable".
                 var list = mainAppContent.lists[key];
                 for (var i = 0; i < list.childElementCount; i++) {
                     makeElementDraggable(list.children[i]);
@@ -152,22 +156,47 @@
         }
     }
 
+    /**
+     * Function to load Tasks that were stored to the client's localStorage
+     * in the last session.
+     *
+     * HTML5 Web Storage API is used here. The data stored to localStorage
+     * takes the following form:
+     * localStorage key = "tasks"
+     * localStorage value = {
+     *                        <id_of_task>: {
+     *                                         name: <name_of_task>,
+     *                                         status: <task_status>
+     *                                      }, ...
+     *                      }
+     */
     function loadTasksFromDisk() {
         var taskList = localStorage.getItem("tasks");
+        // If the user has previously created Tasks with this application.
         if (taskList !== null) {
             taskList = JSON.parse(taskList);
             for (var id in taskList) {
                 if (taskList.hasOwnProperty(id)) {
                     var taskObject = createTask(taskList[id].name, id, taskList[id].status);
+                    // Add each Task that was parsed from localStorage to the
+                    // view.
                     addTaskToDOM(taskObject);
                 }
             }
         }
+        // If the client has no Tasks stored, then create a new empty object
+        // for storing Tasks later.
         else { localStorage.setItem("tasks", JSON.stringify({})); }
     }
 
-    // Store the id of the Task being dragged and set the mouse cursor.
-    // Called when Task is "lifted" by cursor.
+    /**
+     * Event handler for when a Task is "lifted" by the mouse cursor.
+     *
+     * This function stores:
+     *     1) the id of the task being dragged to the dataTransfer property.
+     *     2) the id of the source swim lane (ie. the list the Task is being
+     *        lifted from).
+     */
     function handleDragStart(evt) {
         evt.dataTransfer.setData("listTaskId", evt.target.id);
         evt.dataTransfer.setData("sourceListId", evt.target.parentNode.id);
@@ -176,26 +205,47 @@
     // Get the element that's stored (i.e. the Task being dragged) and append
     // to target (i.e. the target list).
     // The Task being dragged is automatically removed from the previous parent.
+    /**
+     * Event handler for when a Task is "dropped" over a swim lane list.
+     *
+     * This function gets the element being dragged, appends it to the target
+     * list and removes it from the source list.
+     */
     function handleDrop(evt) {
         evt.preventDefault();
 
         var sourceListId = evt.dataTransfer.getData("sourceListId");
+
         var targetList = evt.target;
+
+        // Check if the source list is empty, in which case it is
+        // modified so its height doesn't become 0px.
         checkListIsEmpty(document.querySelector("#" + sourceListId));
 
         var draggedTaskId = evt.dataTransfer.getData("listTaskId");
+        // The Task is always added to the top of the target list.
         targetList.insertBefore(document.querySelector("#" + draggedTaskId), evt.target.childNodes[0]);
 
+        // Update the status of the Task, which is always recorded in
+        // localStorage.
         updateTaskStatus(draggedTaskId, targetList.id);
 
+        // Since the target list is no longer empty, this function will
+        // remove the manual height CSS property.
         checkListIsEmpty(targetList);
     }
 
-    // When element/cursor hovers over drop zone, prevent browser intervening.
+    /**
+     * Prevent browser from intervening when a Task is "dragged over" a swim
+     * lane list.
+     */
     function handleDragover(evt) {
         evt.preventDefault();
     }
 
+    /**
+     * Apply a manual CSS height to a swim lane if it currently has no Tasks.
+     */
     function checkListIsEmpty(l) {
         if (l.children.length <= 1) {
             l.style.height = "50px";
@@ -205,16 +255,34 @@
         }
     }
 
+    /**
+     * Setter for the "status" property of a Task currently sitting in the
+     * browser localStorage.
+     *
+     * @param {string} taskElementId The id of the Task.
+     * @param {string} newStatus The status to update the Task with.
+     */
     function updateTaskStatus(taskElementId, newStatus) {
         var tasks = JSON.parse(localStorage.getItem("tasks"));
         tasks[taskElementId].status = newStatus;
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 
+    /**
+     * Open the "create task" pop-up dialogue.
+     */
     function launchTaskCreator(evt) {
         createTaskModal.modal.style.display = "block";
     }
 
+    /**
+     * Close the "create task" pop-up when either the close button or submit
+     * button is pressed.
+     *
+     * If the submit button is pressed, then the name of the new Task to create
+     * is retrieved from the form and an object representing the new Task is
+     * created for displaying on the DOM.
+     */
     function closeTaskCreator(evt) {
         evt.preventDefault();
 
@@ -224,17 +292,45 @@
             var newTaskObject = createTask(newTaskName);
             addTaskToDOM(newTaskObject);
         }
+        // Hide the pop-up dialogue.
         createTaskModal.modal.style.display = "none";
     }
 
+    /**
+     * Create a Task object
+     *
+     * @param {string} name The name for the Task.
+     * @param {string} id The id for the Task. If left as "null", a new random
+     *     id will be generated.
+     * @param {string} status The status for the Task. If omitted when calling
+     *     this function, it is assumed to be a brand new Task which will sit
+     *     in the "To Do" swim lane.
+     *
+     * @returns {object} An instance of Task class representing the Task.
+     */
     function createTask(name, id = null, status = "to-do") {
         if (id === null) {
+            // Generate a random id with following format: "X1234".
             id = ("X" + (Math.round(Math.random() * 10000)).toString());
         }
         newTask = new Task(name, id, status);
         return newTask;
     }
 
+    /**
+     * Function to add a Task object to the HTML view.
+     *
+     * Responsibilities of this function:
+     *  1) Request a HTML <li> element to be created from the passed Task
+     *      object.
+     *  2) Make this HTML element "draggable".
+     *  3) Set up a "delete" button beside the Task.
+     *  4) Append the Task element to the correct swim lane, depending on its
+     *      status.
+     *
+     * @param {object} task Instance of Task class representing the Task to add
+     *     to the DOM.
+     */
     function addTaskToDOM(task) {
         var newTaskElement = task.toDOMElement('li');
         makeElementDraggable(newTaskElement);
@@ -268,23 +364,36 @@
         }
     }
 
+    /**
+     * Event Handler to remove a Task from the DOM and client's localStorage.
+     */
     function deleteTask(evt) {
+        // Remove the Task from the DOM.
         var taskToDelete = evt.target.parentNode;
         var parentList = taskToDelete.parentNode;
-
         parentList.removeChild(taskToDelete);
 
+        // Remove the Task from the client's localStorage.
         var tasks = JSON.parse(localStorage.getItem("tasks"));
         delete tasks[taskToDelete.id];
-
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 
+    /**
+     * Function to allow a HTML element to be "dragged" on the DOM.
+     *
+     * @param {string} taskElement The HTML element to make draggable.
+     */
     function makeElementDraggable(taskElement) {
         taskElement.draggable = true;
         taskElement.addEventListener("dragstart", handleDragStart, false);
     }
 
+    /**
+     * Store a Task instance to the client's localStorage.
+     *
+     * @param {object} task Task instance to store in localStorage.
+     */
     function storeTaskToDisk(task) {
         var tasks = JSON.parse(localStorage.getItem("tasks"));
         tasks[task.id] = {name: task.name, status: task.status};
