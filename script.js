@@ -101,7 +101,9 @@
 
         // Add an event listener to the "create task" button, which opens the
         // "create task" pop-up dialogue.
-        mainAppContent.createTaskButton.addEventListener("click", launchTaskCreator, false);
+        mainAppContent.createTaskButton.addEventListener("click",
+                                                         launchTaskCreator,
+                                                         false);
     }
 
     /**
@@ -177,7 +179,8 @@
             taskList = JSON.parse(taskList);
             for (var id in taskList) {
                 if (taskList.hasOwnProperty(id)) {
-                    var taskObject = createTask(taskList[id].name, id, taskList[id].status);
+                    var taskObject = createTask(taskList[id].name, id,
+                                                taskList[id].status);
                     // Add each Task that was parsed from localStorage to the
                     // view.
                     addTaskToDOM(taskObject);
@@ -224,7 +227,8 @@
 
         var draggedTaskId = evt.dataTransfer.getData("listTaskId");
         // The Task is always added to the top of the target list.
-        targetList.insertBefore(document.querySelector("#" + draggedTaskId), evt.target.childNodes[0]);
+        targetList.insertBefore(document.querySelector("#" + draggedTaskId),
+                                evt.target.childNodes[0]);
 
         // Update the status of the Task, which is always recorded in
         // localStorage.
