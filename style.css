@@ -1,47 +1,86 @@
+/* Set font family for entire document. */
 html {
     font-family: sans-serif;
 }
 
+/*
+ * Set the div containing the "create task" button and swim lanes to be a
+ * flex container who aligns the elements in a row.
+ * This helps the content adapt to different display resolutions/ratios.
+ */
 .flex-container {
     display: flex;
     flex-direction: row;
 }
 
+/*
+ * Set swim lane width to 100% so each lane isn't squashed to one side.
+ * Setting the margin is purely for consmetic purposes.
+ */
 main {
     width: 100%;
     margin: 1%;
 }
 
+/*
+ * Set the aside element (containing the "create task" button) to be a flex
+ * container. This ensures the button itself is vertically centred.
+ */
 aside {
     margin: 1%;
     display: flex;
     align-items: center;
 }
 
+/*
+ * Ensure the swim lanes stretch make use of the full width of the <main>
+ * element. Also ensure the height is sufficient to allow elements to be
+ * "dropped" into the containing swim lanes.
+ */
 table {
     width: 100%;
-    height: 80%;
+    height: 100%;
 }
 
+/*
+ * Set each swim lane to use one third of the table's width so exaclty three
+ * can be fitted.
+ */
 td {
     width: 33%;
 }
 
+/*
+ * Cosmetic styling of the swim lanes' headers.
+ */
 th {
     font-size: 5ex;
     background-color: #d9d9d9;
 }
 
+/*
+ * Light blue background colour of each swim lane.
+ */
 tr {
     background-color: #b0fff3;
 }
 
+/*
+ * Disable the default "bullet" ul style.
+ * Setting the minimum height ensures Tasks can be dropped "anywhere" over the
+ * "blue" swim lane regions.
+ */
 ul {
     list-style-type: none;
     padding: 0;
     min-height: 100%;
 }
 
+/*
+ * All cosmetic except:
+ * Force a word break for Tasks with names longer than the list width
+ * (i.e. the width of the "green" Task background).
+ */
 li {
     background-color: #a9fe30;
     margin-top: 5%;
@@ -53,6 +92,21 @@ li {
     margin-right: auto;
 }
 
+/*
+ * Styles the little red "X" button beside each Task displayed on the swim
+ * lanes.
+ */
+.delete-task {
+    float: right;
+    color: #fe1d1d;
+    cursor: pointer;
+}
+
+/*
+ * Hide the "create task" pop-up and place it in front of the main view.
+ * The modal-overlay represents the entire "create task" pop-up, including
+ * the grey transparent background.
+ */
 .modal-overlay {
     display: none;
     z-index: 1;
@@ -64,6 +118,10 @@ li {
     left: 0;
 }
 
+/*
+ * Styles the "create task" pop-up content. This only encompasses the white box
+ * in the centre of the screen containing the form.
+ */
 .modal-content {
     background-color: #ffffff;
     margin: auto;
@@ -72,13 +130,10 @@ li {
     margin-top: 20%;
 }
 
+/*
+ * Styles the "close" button on the "create task" pop-up dialogue.
+ */
 .close-modal {
     float: right;
-    cursor: pointer;
-}
-
-.delete-task {
-    float: right;
-    color: #fe1d1d;
     cursor: pointer;
 }
