@@ -18,7 +18,7 @@ have completed the task, drag it to the **Done** lane.
 
 ## Technologies Used
 * Drag and Drop API.
-* Web Storage API
+* Web Storage API.
 
 ## Known Issues and Workarounds
 
