@@ -90,6 +90,7 @@ li {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+    padding: 0px 10px 0px 10px;
 }
 
 /*
@@ -100,6 +101,17 @@ li {
     float: right;
     color: #fe1d1d;
     cursor: pointer;
+}
+
+/*
+ * Styles the little "i" symbol beside each Task displayed on the swim
+ * lanes.
+ */
+.edit-task {
+    float: left;
+    color: #fe1d1d;
+    cursor: pointer;
+    font-style: italic;
 }
 
 /*

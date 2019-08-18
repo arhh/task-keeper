@@ -1,4 +1,4 @@
-// Don't polute the global variable space with the variables here.
+// Don't pollute the global variable space with the variables here.
 (function () {
     // Only run script once DOM has finished loading.
     window.addEventListener("DOMContentLoaded", init, false);
@@ -345,7 +345,15 @@
         deleteButton.innerHTML = "&times;";
         deleteButton.addEventListener("click", deleteTask, false);
 
+        // Initialise the "edit" button for updating the task details
+        var editButton = document.createElement("a");
+        editButton.className = "edit-task";
+        editButton.innerHTML = "i";
+        console.log(editButton);
+        editButton.addEventListener("click", null, false);
+
         newTaskElement.appendChild(deleteButton);
+        newTaskElement.appendChild(editButton);
 
         var taskStatus = task.status;
 
