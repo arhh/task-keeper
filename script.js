@@ -350,7 +350,7 @@
         editButton.className = "edit-task";
         editButton.innerHTML = "i";
         console.log(editButton);
-        editButton.addEventListener("click", null, false);
+        editButton.addEventListener("click", editTask, false);
 
         newTaskElement.appendChild(deleteButton);
         newTaskElement.appendChild(editButton);
@@ -389,6 +389,24 @@
         var tasks = JSON.parse(localStorage.getItem("tasks"));
         delete tasks[taskToDelete.id];
         localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    /**
+     * Event Handler to edit a Task.
+     *
+     * This function works as follows:
+     *  1) Removes the task that the user wants to edit.
+     *  2) Open the task creator dialogue to allow user to type the updated task details.
+     *
+     * Notes:
+     *  - The status of the edited task will be reverted to "to-do", similar to how new tasks are
+     *     added to board.
+     */
+    function editTask(evt) {
+        // Delete the current task to be edited
+        deleteTask(evt);
+        // Launch the task creator to allow user to change edited task
+        launchTaskCreator();
     }
 
     /**
