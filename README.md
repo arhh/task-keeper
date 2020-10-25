@@ -32,4 +32,4 @@ Tasks must be carefully dragged onto the blue zones of a swim lane to be success
 Reloading the session discards the ordering of tasks on each swim lane.
 
 ## Feature Roadmap
-* Editing tasks.
+* Edit without deleting the existing task
