@@ -51,14 +51,15 @@
                 </table>
             </main>
 
-            <!-- "Create Task" pop-up dialogue box (modal) -->
-            <div id="create-task-modal" class="modal-overlay">
+            <!-- "Edit Task" pop-up dialogue box (modal) -->
+            <div id="edit-task-modal" class="modal-overlay">
                 <div class="modal-content">
                     <span class="close-modal">&times;</span>
                     <h2>Create or Edit Task</h2>
-                    <form action="#" id="create-task-form">
+                    <form action="#" id="edit-task-form">
                         <label for="task-name">Name of Task:</label>
                         <input type="text" id="task-name" name="task-name">
+                        <input type="hidden" id="task-id" name="task-id" value="">
                         <br><br>
                         <input type="submit" value="Save">
                         <p style="font-style:italic">If editing a task, the existing task will be
