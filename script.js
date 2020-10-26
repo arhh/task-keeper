@@ -414,7 +414,11 @@
     }
 
     /**
-     * Event Handler to remove a Task from the DOM and client's localStorage.
+     * Event Handler when the delete icon is clicked on the task.
+     *
+     * Purpose of this function is to get the ID of the task element
+     * and pass to removeTask() to complete the removal of the task
+     * from the DOM and disk.
      */
     function deleteTask(evt) {
         // Get the DOM element representing the task
@@ -423,6 +427,14 @@
         removeTask(taskToDeleteId);
     }
 
+    /**
+     * Remove a task from the DOM and disk.
+     *
+     * A task, identified by ID, is removed from the board on the DOM.
+     * The function then removes the task, identified by ID, from disk.
+     *
+     * @param {string} taskID ID of Task to delete.
+     */
     function removeTask(taskID) {
         // Remove the Task from the DOM
         var taskElement = document.getElementById(taskID);
