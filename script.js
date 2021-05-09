@@ -5,9 +5,9 @@
 
     // Two variables representing:
     //     a) The main application (i.e. The three swim lanes)
-    //     b) The "create task" modal (i.e. The pop-up for creating new tasks)
+    //     b) The "edit task" modal (i.e. The pop-up for creating new tasks)
     var mainAppContent;
-    var createTaskModal;
+    var editTaskModal;
 
     /**
      * Class representing a Task.
@@ -49,7 +49,6 @@
          * @returns {object} The JavaScript object representing this Task.
          */
         toObjectNotation() {
-            console.log({id: this.id, name: this.name, status: this.status});
             return {id: this.id, name: this.name, status: this.status};
         }
     }
@@ -73,16 +72,16 @@
             }
         };
 
-        // Object containing the DOM elements of the "create task" pop-up.
-        createTaskModal = {
-            modal: document.querySelector("#create-task-modal"),
-            close: document.querySelector("#create-task-modal .close-modal"),
-            form: document.querySelector("#create-task-form")
+        // Object containing the DOM elements of the "edit task" pop-up.
+        editTaskModal = {
+            modal: document.querySelector("#edit-task-modal"),
+            close: document.querySelector("#edit-task-modal .close-modal"),
+            form: document.querySelector("#edit-task-form")
         };
 
         // Call two functions to complete the set up of the application views.
         setUpMainAppContent();
-        setUpCreateTaskModal();
+        setUpEditTaskModal();
     }
 
     /**
@@ -100,21 +99,21 @@
         loadTasksFromDisk();
 
         // Add an event listener to the "create task" button, which opens the
-        // "create task" pop-up dialogue.
+        // "edit task" pop-up dialogue.
         mainAppContent.createTaskButton.addEventListener("click",
-                                                         launchTaskCreator,
+                                                         launchTaskEditor,
                                                          false);
     }
 
     /**
-     * Function to set up the "create task" pop-up view.
+     * Function to set up the "edit task" pop-up view.
      *
      * This function adds event listeners to the "submit" and "close" buttons
      * of this dialogue box.
      */
-    function setUpCreateTaskModal() {
-        createTaskModal.close.addEventListener("click", closeTaskCreator, false);
-        createTaskModal.form.addEventListener("submit", closeTaskCreator, false);
+    function setUpEditTaskModal() {
+        editTaskModal.close.addEventListener("click", closeTaskEditor, false);
+        editTaskModal.form.addEventListener("submit", closeTaskEditor, false);
     }
 
     /**
@@ -273,31 +272,70 @@
     }
 
     /**
-     * Open the "create task" pop-up dialogue.
+     * Open the "edit task" pop-up dialogue.
      */
-    function launchTaskCreator(evt) {
-        createTaskModal.modal.style.display = "block";
+    function launchTaskEditor(evt) {
+        editTaskModal.modal.style.display = "block";
+
+        var taskElement = "";
+        var taskId = "";
+        var currentTaskName = "";
+
+        if (evt.target.className === "edit-task") {
+            taskElement = evt.target.parentNode;
+            taskId = taskElement.id;
+            currentTaskName = taskElement.firstChild.textContent;
+        }
+
+        // Update the hidden taskid field on modal to be task ID
+        editTaskModal.form.elements["task-id"].value = taskId;
+        editTaskModal.form.elements["task-name"].value = currentTaskName;
     }
 
     /**
-     * Close the "create task" pop-up when either the close button or submit
+     * Close the "edit task" pop-up when either the close button or submit
      * button is pressed.
      *
-     * If the submit button is pressed, then the name of the new Task to create
-     * is retrieved from the form and an object representing the new Task is
-     * created for displaying on the DOM.
+     * When form submitted and hidden input field is empty, then the name
+     * of the Task is retrieved from the form and an object
+     * representing the Task is created for display on the DOM.
+     *
+     * When form submitted and hidden input field is populated, the name of
+     * the Task is retrieved from form, and the existing task's name is
+     * updated to match.
      */
-    function closeTaskCreator(evt) {
+    function closeTaskEditor(evt) {
         evt.preventDefault();
 
         if (evt.type === "submit") {
-            var formData = new FormData(createTaskModal.form);
-            var newTaskName = formData.get("task-name");
-            var newTaskObject = createTask(newTaskName);
-            addTaskToDOM(newTaskObject);
+            var formData = new FormData(editTaskModal.form);
+            var taskName = formData.get("task-name");
+            var taskId = formData.get("task-id");
+            // The client is creating a brand new task if no ID is set in
+            // the form
+            if (taskId === "") {
+                var newTaskObject = createTask(taskName);
+                addTaskToDOM(newTaskObject);
+            }
+            else {
+                // Get the existing task to be updated based on the ID
+                var taskToUpdate = document.getElementById(taskId);
+                // Get the current status of the task being updated based
+                // the board in which it's sitting
+                var taskStatus = taskToUpdate.parentNode.id;
+                // Create a new task to represent the updated Task
+                var newTaskObject = createTask(name = taskName,
+                                               id = taskId,
+                                               status = taskStatus);
+                // Delete the task being edited before adding the edited
+                // task to the board
+                removeTask(taskId);
+                // Add the updated task to the board
+                addTaskToDOM(newTaskObject)
+            }
         }
         // Hide the pop-up dialogue.
-        createTaskModal.modal.style.display = "none";
+        editTaskModal.modal.style.display = "none";
     }
 
     /**
@@ -349,7 +387,6 @@
         var editButton = document.createElement("a");
         editButton.className = "edit-task";
         editButton.innerHTML = "i";
-        console.log(editButton);
         editButton.addEventListener("click", editTask, false);
 
         newTaskElement.appendChild(deleteButton);
@@ -358,15 +395,15 @@
         var taskStatus = task.status;
 
         switch (taskStatus) {
-            case "to-do":
+            case mainAppContent.lists.toDoList.id:
                 mainAppContent.lists.toDoList.appendChild(newTaskElement);
                 storeTaskToDisk(newTask);
                 break;
-            case "doing":
+            case mainAppContent.lists.doingList.id:
                 mainAppContent.lists.doingList.appendChild(newTaskElement);
                 storeTaskToDisk(newTask);
                 break;
-            case "done":
+            case mainAppContent.lists.doneList.id:
                 mainAppContent.lists.doneList.appendChild(newTaskElement);
                 storeTaskToDisk(newTask);
                 break;
@@ -377,17 +414,36 @@
     }
 
     /**
-     * Event Handler to remove a Task from the DOM and client's localStorage.
+     * Event Handler when the delete icon is clicked on the task.
+     *
+     * Purpose of this function is to get the ID of the task element
+     * and pass to removeTask() to complete the removal of the task
+     * from the DOM and disk.
      */
     function deleteTask(evt) {
-        // Remove the Task from the DOM.
-        var taskToDelete = evt.target.parentNode;
-        var parentList = taskToDelete.parentNode;
-        parentList.removeChild(taskToDelete);
+        // Get the DOM element representing the task
+        var taskToDeleteId = evt.target.parentNode.id;
+        // Remove the task from the DOM and disk
+        removeTask(taskToDeleteId);
+    }
 
-        // Remove the Task from the client's localStorage.
+    /**
+     * Remove a task from the DOM and disk.
+     *
+     * A task, identified by ID, is removed from the board on the DOM.
+     * The function then removes the task, identified by ID, from disk.
+     *
+     * @param {string} taskID ID of Task to delete.
+     */
+    function removeTask(taskID) {
+        // Remove the Task from the DOM
+        var taskElement = document.getElementById(taskID);
+        var parentList = taskElement.parentNode;
+        parentList.removeChild(taskElement);
+
+        // Remove the Task from the client's localStorage
         var tasks = JSON.parse(localStorage.getItem("tasks"));
-        delete tasks[taskToDelete.id];
+        delete tasks[taskElement.id];
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 
@@ -403,10 +459,8 @@
      *     added to board.
      */
     function editTask(evt) {
-        // Delete the current task to be edited
-        deleteTask(evt);
         // Launch the task creator to allow user to change edited task
-        launchTaskCreator();
+        launchTaskEditor(evt);
     }
 
     /**
