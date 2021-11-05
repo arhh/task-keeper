@@ -1,0 +1,20 @@
+{
+  "name": "task-keeper",
+  "public": false,
+  "version": "1.0.0",
+  "description": "Task Keeper is a Kanban-like board for helping you keep track of your work.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arhh/task-keeper.git"
+  },
+  "author": "arhh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arhh/task-keeper/issues"
+  },
+  "homepage": "https://github.com/arhh/task-keeper#readme"
+}
