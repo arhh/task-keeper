@@ -1,6 +1,6 @@
 {
   "name": "task-keeper",
-  "public": false,
+  "private": true,
   "version": "1.0.0",
   "description": "Task Keeper is a Kanban-like board for helping you keep track of your work.",
   "main": "script.js",
