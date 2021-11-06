@@ -1,5 +1,6 @@
 // Don't pollute the global variable space with the variables here.
 (function () {
+    "use strict"
     // Only run script once DOM has finished loading.
     window.addEventListener("DOMContentLoaded", init, false);
 
@@ -75,7 +76,6 @@
         // Object containing the DOM elements of the "edit task" pop-up.
         editTaskModal = {
             modal: document.querySelector("#edit-task-modal"),
-            close: document.querySelector("#edit-task-modal .close-modal"),
             form: document.querySelector("#edit-task-form")
         };
 
@@ -112,8 +112,8 @@
      * of this dialogue box.
      */
     function setUpEditTaskModal() {
-        editTaskModal.close.addEventListener("click", closeTaskEditor, false);
-        editTaskModal.form.addEventListener("submit", closeTaskEditor, false);
+        editTaskModal.modal.addEventListener("click", handleModalAction, false);
+        // editTaskModal.form.addEventListener("submit", handleModalAction, false);
     }
 
     /**
@@ -304,7 +304,7 @@
      * the Task is retrieved from form, and the existing task's name is
      * updated to match.
      */
-    function closeTaskEditor(evt) {
+    function handleModalAction(evt) {
         evt.preventDefault();
 
         if (evt.type === "submit") {
@@ -333,9 +333,10 @@
                 // Add the updated task to the board
                 addTaskToDOM(newTaskObject)
             }
+        } else if (evt.target.className === "modal-overlay" || evt.target.className === "close-modal") {
+            // Hide the pop-up dialogue.
+            editTaskModal.modal.style.display = "none";
         }
-        // Hide the pop-up dialogue.
-        editTaskModal.modal.style.display = "none";
     }
 
     /**
