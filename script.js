@@ -1,5 +1,6 @@
 // Don't pollute the global variable space with the variables here.
 (function () {
+    "use strict"
     // Only run script once DOM has finished loading.
     window.addEventListener("DOMContentLoaded", init, false);
 
@@ -75,7 +76,6 @@
         // Object containing the DOM elements of the "edit task" pop-up.
         editTaskModal = {
             modal: document.querySelector("#edit-task-modal"),
-            close: document.querySelector("#edit-task-modal .close-modal"),
             form: document.querySelector("#edit-task-form")
         };
 
@@ -112,8 +112,8 @@
      * of this dialogue box.
      */
     function setUpEditTaskModal() {
-        editTaskModal.close.addEventListener("click", closeTaskEditor, false);
-        editTaskModal.form.addEventListener("submit", closeTaskEditor, false);
+        editTaskModal.modal.addEventListener("click", handleModalAction, false);
+        // editTaskModal.form.addEventListener("submit", handleModalAction, false);
     }
 
     /**
@@ -304,10 +304,10 @@
      * the Task is retrieved from form, and the existing task's name is
      * updated to match.
      */
-    function closeTaskEditor(evt) {
+    function handleModalAction(evt) {
         evt.preventDefault();
 
-        if (evt.type === "submit") {
+        if (evt.target.type === "submit") {
             var formData = new FormData(editTaskModal.form);
             var taskName = formData.get("task-name");
             var taskId = formData.get("task-id");
@@ -324,18 +324,18 @@
                 // the board in which it's sitting
                 var taskStatus = taskToUpdate.parentNode.id;
                 // Create a new task to represent the updated Task
-                var newTaskObject = createTask(name = taskName,
-                                               id = taskId,
-                                               status = taskStatus);
+                var newTaskObject = createTask(taskName, taskId, taskStatus);
                 // Delete the task being edited before adding the edited
                 // task to the board
                 removeTask(taskId);
                 // Add the updated task to the board
                 addTaskToDOM(newTaskObject)
             }
+            editTaskModal.modal.style.display = "none";
+        } else if (evt.target.className === "modal-overlay" || evt.target.className === "close-modal") {
+            // Hide the pop-up dialogue.
+            editTaskModal.modal.style.display = "none";
         }
-        // Hide the pop-up dialogue.
-        editTaskModal.modal.style.display = "none";
     }
 
     /**
@@ -355,7 +355,7 @@
             // Generate a random id with following format: "X1234".
             id = ("X" + (Math.round(Math.random() * 10000)).toString());
         }
-        newTask = new Task(name, id, status);
+        const newTask = new Task(name, id, status);
         return newTask;
     }
 
@@ -397,15 +397,15 @@
         switch (taskStatus) {
             case mainAppContent.lists.toDoList.id:
                 mainAppContent.lists.toDoList.appendChild(newTaskElement);
-                storeTaskToDisk(newTask);
+                storeTaskToDisk(task);
                 break;
             case mainAppContent.lists.doingList.id:
                 mainAppContent.lists.doingList.appendChild(newTaskElement);
-                storeTaskToDisk(newTask);
+                storeTaskToDisk(task);
                 break;
             case mainAppContent.lists.doneList.id:
                 mainAppContent.lists.doneList.appendChild(newTaskElement);
-                storeTaskToDisk(newTask);
+                storeTaskToDisk(task);
                 break;
             default:
                 console.error("No matching swim lane for task status");
