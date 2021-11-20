@@ -82,7 +82,7 @@ ul {
  * (i.e. the width of the "green" Task background).
  */
 li {
-    background-color: #a9fe30;
+    background-color: #ffffcc;
     margin-top: 5%;
     margin-bottom: 5%;
     width: 80%;
@@ -138,14 +138,46 @@ li {
     background-color: #ffffff;
     margin: auto;
     width: 30%;
-    padding: 10px;
+    /* padding: 10px; */
     margin-top: 20%;
+}
+
+.modal-content > h2 {
+    padding: 10px;
 }
 
 /*
  * Styles the "close" button on the "Edit task" pop-up dialogue.
  */
-.close-modal {
-    float: right;
-    cursor: pointer;
+#save-task {
+    background-color: green;
+}
+
+#close-modal {
+    background-color: red;
+}
+
+.form-content {
+    padding: 10px;
+}
+
+.form-actions {
+    display: flex;
+    text-align: center;
+}
+
+.form-actions a {
+    width: 50%;
+    cursor: default;
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+}
+
+#save-task {
+    background-color: #99ff99;
+}
+
+#close-modal {
+    background-color: #FFA6A6;
 }

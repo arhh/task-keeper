@@ -306,7 +306,7 @@ function launchTaskEditor(evt) {
 function handleModalAction(evt) {
     evt.preventDefault();
 
-    if (evt.target.type === "submit") {
+    if (evt.target.id === "save-task") {
         let formData = new FormData(editTaskModal.form);
         let taskName = formData.get("task-name");
         let taskId = formData.get("task-id");
@@ -331,7 +331,7 @@ function handleModalAction(evt) {
             addTaskToDOM(newTaskObject)
         }
         editTaskModal.modal.style.display = "none";
-    } else if (evt.target.className === "modal-overlay" || evt.target.className === "close-modal") {
+    } else if (evt.target.className === "modal-overlay" || evt.target.id === "close-modal") {
         // Hide the pop-up dialogue.
         editTaskModal.modal.style.display = "none";
     }
