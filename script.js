@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 
 // Only run script once DOM has finished loading.
 window.addEventListener("DOMContentLoaded", init, false);
@@ -100,8 +100,8 @@ function setUpMainAppContent() {
     // Add an event listener to the "create task" button, which opens the
     // "edit task" pop-up dialogue.
     mainAppContent.createTaskButton.addEventListener("click",
-                                                     launchTaskEditor,
-                                                     false);
+        launchTaskEditor,
+        false);
 }
 
 /**
@@ -178,7 +178,7 @@ function loadTasksFromDisk() {
         for (let id in taskList) {
             if (taskList.hasOwnProperty(id)) {
                 let taskObject = createTask(taskList[id].name, id,
-                                            taskList[id].status);
+                    taskList[id].status);
                 // Add each Task that was parsed from localStorage to the
                 // view.
                 addTaskToDOM(taskObject);
@@ -226,7 +226,7 @@ function handleDrop(evt) {
     let draggedTaskId = evt.dataTransfer.getData("listTaskId");
     // The Task is always added to the top of the target list.
     targetList.insertBefore(document.querySelector("#" + draggedTaskId),
-                            evt.target.childNodes[0]);
+        evt.target.childNodes[0]);
 
     // Update the status of the Task, which is always recorded in
     // localStorage.
@@ -275,6 +275,7 @@ function updateTaskStatus(taskElementId, newStatus) {
  */
 function launchTaskEditor(evt) {
     editTaskModal.modal.style.display = "block";
+    editTaskModal.modal.style.animationName = "fadein";
 
     let taskElement = "";
     let taskId = "";
@@ -328,12 +329,20 @@ function handleModalAction(evt) {
             // task to the board
             removeTask(taskId);
             // Add the updated task to the board
-            addTaskToDOM(newTaskObject)
+            addTaskToDOM(newTaskObject);
         }
-        editTaskModal.modal.style.display = "none";
+        // Hide the pop-up dialogue.
+        editTaskModal.modal.style.animationName = "fadeout";
+        editTaskModal.modal.addEventListener("animationend", () => {
+            editTaskModal.modal.style.display = "none";
+        }, {once: true});
+
     } else if (evt.target.className === "modal-overlay" || evt.target.id === "close-modal") {
         // Hide the pop-up dialogue.
-        editTaskModal.modal.style.display = "none";
+        editTaskModal.modal.style.animationName = "fadeout";
+        editTaskModal.modal.addEventListener("animationend", () => {
+            editTaskModal.modal.style.display = "none";
+        }, {once: true});
     }
 }
 
@@ -373,7 +382,7 @@ function createTask(name, id = null, status = "to-do") {
  *     to the DOM.
  */
 function addTaskToDOM(task) {
-    let newTaskElement = task.toDOMElement('li');
+    let newTaskElement = task.toDOMElement("li");
     makeElementDraggable(newTaskElement);
 
     // Create the "X" button for deleting
@@ -394,21 +403,21 @@ function addTaskToDOM(task) {
     let taskStatus = task.status;
 
     switch (taskStatus) {
-        case mainAppContent.lists.toDoList.id:
-            mainAppContent.lists.toDoList.appendChild(newTaskElement);
-            storeTaskToDisk(task);
-            break;
-        case mainAppContent.lists.doingList.id:
-            mainAppContent.lists.doingList.appendChild(newTaskElement);
-            storeTaskToDisk(task);
-            break;
-        case mainAppContent.lists.doneList.id:
-            mainAppContent.lists.doneList.appendChild(newTaskElement);
-            storeTaskToDisk(task);
-            break;
-        default:
-            console.error("No matching swim lane for task status");
-            console.error(`Task Status: ${taskStatus}`);
+    case mainAppContent.lists.toDoList.id:
+        mainAppContent.lists.toDoList.appendChild(newTaskElement);
+        storeTaskToDisk(task);
+        break;
+    case mainAppContent.lists.doingList.id:
+        mainAppContent.lists.doingList.appendChild(newTaskElement);
+        storeTaskToDisk(task);
+        break;
+    case mainAppContent.lists.doneList.id:
+        mainAppContent.lists.doneList.appendChild(newTaskElement);
+        storeTaskToDisk(task);
+        break;
+    default:
+        console.error("No matching swim lane for task status");
+        console.error(`Task Status: ${taskStatus}`);
     }
 }
 

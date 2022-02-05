@@ -114,6 +114,16 @@ li {
     font-style: italic;
 }
 
+@keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
+
 /*
  * Hide the "Edit task" pop-up and place it in front of the main view.
  * The modal-overlay represents the entire "Edit task" pop-up, including
@@ -128,6 +138,8 @@ li {
     background-color: rgba(166, 166, 166, 0.6);
     top: 0;
     left: 0;
+    animation-name: fadein;
+    animation-duration: 0.4s;
 }
 
 /*
@@ -138,7 +150,6 @@ li {
     background-color: #ffffff;
     margin: auto;
     width: 30%;
-    /* padding: 10px; */
     margin-top: 20%;
 }
 
