@@ -151,6 +151,7 @@ li {
     margin: auto;
     width: 30%;
     margin-top: 20%;
+    box-shadow: 5px 5px 13px 5px dimgrey;
 }
 
 .modal-content > h2 {
@@ -187,8 +188,20 @@ li {
 
 #save-task {
     background-color: #99ff99;
+    transition: background-color 0.4s;
+}
+
+#save-task:hover {
+    background-color: #33ff33;
+    cursor: pointer;
 }
 
 #close-modal {
     background-color: #FFA6A6;
+    transition: background-color 0.4s;
+}
+
+#close-modal:hover {
+    background-color: #ff3333;
+    cursor: pointer;
 }
